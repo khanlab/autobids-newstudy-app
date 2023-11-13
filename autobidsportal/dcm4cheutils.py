@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import logging
 import pathlib
-import pipes
 import re
 import subprocess
 import tempfile
@@ -296,7 +295,7 @@ class Dcm4cheUtils:
             "--accept-timeout",
             "10000",
             "--user",
-            f"{pipes.quote(self.username)}",
+            f"{self.username}",
             "--user-pass",
             f"{self.password}",
         ]

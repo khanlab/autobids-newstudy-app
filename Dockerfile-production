@@ -6,14 +6,14 @@ RUN echo "deb http://deb.debian.org/debian bullseye-backports main" > /etc/apt/s
     build-essential=12.9 \
     ca-certificates=20210119 \
     cryptsetup=2:2.3.7-1+deb11u1 \
-    curl=7.74.0-1.3+deb11u10 \
+    curl=7.74.0-1.3+deb11u9 \
     default-jre=2:1.11-72 \
     fakeroot=1.25.3-1.1 \
     fuse2fs=1.46.2-2 \
     fuse-overlayfs=1.4.0-1 \
     git=1:2.30.2-1+deb11u2 \
     git-annex=8.20210223-2 \
-    libcurl4=7.74.0-1.3+deb11u10 \
+    libcurl4=7.74.0-1.3+deb11u9 \
     libseccomp-dev=2.5.1-1+deb11u1 \
     pkg-config=0.29.2-1 \
     python3=3.9.2-3 \
@@ -45,17 +45,17 @@ RUN ls \
 ENV PATH /opt/apptainer/bin:$PATH
 
 FROM apptainer AS apptainer-builds
-COPY ./compose/cfmm2tar-custom /opt/cfmm2tar-custom
 RUN mkdir /opt/apptainer-images \
-    && apptainer build /opt/apptainer-images/cfmm2tar_v1.1.1.sif docker://tristankk/cfmm2tar-custom:v1.1.1 \
-    && apptainer build /opt/apptainer-images/tar2bids_v0.2.3.sif docker://khanlab/tar2bids:v0.2.3 \
+    && apptainer build /opt/apptainer-images/cfmm2tar_v1.1.1.sif docker://khanlab/cfmm2tar:v1.1.1 \
+    && apptainer build /opt/apptainer-images/tar2bids_v0.2.3.sif docker://khanlab/tar2bids:v0.2.0 \
     && apptainer build /opt/apptainer-images/gradcorrect_v0.0.3a.sif docker://khanlab/gradcorrect:v0.0.3a
 
 # Build wheel for autobidsportal
 FROM requirements as wheel
 WORKDIR /opt/autobidsportal
 COPY . .
-RUN pip install --no-cache-dir pip==22.2.2 poetry==1.3.0 \
+RUN pip install --no-cache-dir pip==22.2.2 \
+    && pip install --no-cache-dir poetry==1.3.0 \
     && poetry build -f wheel
 
 # Runtime autobidsportal
